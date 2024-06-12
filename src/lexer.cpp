@@ -1,108 +1,71 @@
 #include "lexer.hpp"
 #include <cctype>
-#include <fstream>
-#include <iostream>
-#include <unordered_map>
 #include <unordered_set>
 
 namespace Compiler {
 
-const std::unordered_set<std::string> KEYWORDS = {"if",   "int",    "while", "do",
-                                                  "else", "return", "break", "continue"};
-
-const std::unordered_set<std::string> SEPARATORS = {",", ";", "(", ")", "{", "}"};
-
-std::unordered_map<std::string, TokenType> operatorSeparatorMap = {
-    {"+", OPERATOR},  {"-", OPERATOR},  {"*", OPERATOR},  {"/", OPERATOR},  {"=", OPERATOR},
-    {"!=", OPERATOR}, {"<", OPERATOR},  {"<=", OPERATOR}, {">", OPERATOR},  {">=", OPERATOR},
-
-    {",", SEPARATOR}, {";", SEPARATOR}, {"(", SEPARATOR}, {")", SEPARATOR}, {"{", SEPARATOR},
-    {"}", SEPARATOR}};
-
-SymbolTableEntry::SymbolTableEntry(int tokenType, const std::string &symbol)
-    : symbol(symbol), tokenType(tokenType) {
+Lexer::Lexer(std::string code) : code(std::move(code)), index(0) {
 }
 
-void SymbolTable::insertSymbol(const std::string &symbol, int tokenType) {
-    entries.emplace_back(tokenType, symbol);
+void Lexer::skipWhitespace() {
+    while (index < code.length() && isspace(code[index])) { ++index; }
 }
 
-void SymbolTable::printTable() const {
-    std::cout << "符号表：\n";
-    for (const auto &entry : entries) {
-        std::cout << "(" << entry.tokenType << ", \"" << entry.symbol << "\")\n";
+Token Lexer::nextToken() {
+    skipWhitespace();
+    if (index >= code.length()) { return Token{TokenType::END_OF_FILE, ""}; }
+
+    char currentChar = code[index];
+
+    if (isalpha(currentChar)) { return handleAlpha(); }
+    if (isdigit(currentChar)) { return handleDigit(); }
+    return handleSeparatorOrOperator();
+    // return Token(TokenType::END_OF_FILE, ""); // Unrecognized character
+}
+
+Token Lexer::handleAlpha() {
+    std::string value;
+    while (index < code.length() && isalnum(code[index])) {
+        value += code[index];
+        ++index;
     }
+
+    return isKeyword(value) ? Token{TokenType::KEYWORD, value}
+                            : Token{TokenType::IDENTIFIER, value};
 }
 
-bool isKeyword(const std::string &word) {
-    return KEYWORDS.find(word) != KEYWORDS.end();
+Token Lexer::handleDigit() {
+    std::string value;
+    while (index < code.length() && isdigit(code[index])) { value += code[index++]; }
+    return Token{TokenType::CONSTANT, value};
 }
 
-bool isSeparator(const std::string &charStr) {
-    return SEPARATORS.find(charStr) != SEPARATORS.end();
-}
+Token Lexer::handleSeparatorOrOperator() {
+    std::string currentWord(&code[index], 1);
 
-void SymbolTable::handleAlpha(const std::string &code, size_t &index) {
-    size_t end = index + 1;
-    while (end < code.size() && isalnum(code[end])) { end++; }
-    std::string word = code.substr(index, end - index);
-    index = end - 1;
-    insertSymbol(word, isKeyword(word) ? KEYWORD : IDENTIFIER);
-}
-
-void SymbolTable::handleDigit(const std::string &code, size_t &index) {
-    size_t end = index + 1;
-    while (end < code.size() && isdigit(code[end])) { end++; }
-    std::string num = code.substr(index, end - index);
-    insertSymbol(num, CONSTANT);
-    index = end - 1;
-}
-
-bool SymbolTable::handleSeparatorOrOperator(const std::string &code, size_t &index) {
-    std::string currentChar(&code[index], 1);
-
-    if (currentChar == "<" || currentChar == ">" || currentChar == "!") {
+    if (currentWord == "<" || currentWord == ">" || currentWord == "!") {
         if (index + 1 < code.size()) {
             std::string nextChar(&code[index + 1], 1);
-            std::string combined = currentChar + nextChar;
+            std::string combined = currentWord + nextChar;
             if (operatorSeparatorMap.find(combined) != operatorSeparatorMap.end()) {
-                currentChar = combined;
+                currentWord = combined;
                 index++;
             }
         }
     }
-
-    if (operatorSeparatorMap.find(currentChar) != operatorSeparatorMap.end()) {
-        insertSymbol(currentChar, operatorSeparatorMap[currentChar]);
-    } else {
-        return false;
+    index++;
+    if (operatorSeparatorMap.find(currentWord) != operatorSeparatorMap.end()) {
+        return Token{operatorSeparatorMap[currentWord], currentWord};
     }
-    return true;
+    return Token{TokenType::END_OF_FILE, ""}; // Unrecognized character
 }
 
-void SymbolTable::analyze(const std::string &code) {
-    for (size_t i = 0; i < code.size(); i++) {
-        if (isspace(code[i])) { continue; }
-        if (isalpha(code[i])) {
-            handleAlpha(code, i);
-        } else if (isdigit(code[i])) {
-            handleDigit(code, i);
-        } else {
-            if (!handleSeparatorOrOperator(code, i)) {
-                std::cerr << "错误： " << code[i] << " 不是有效的操作符！" << '\n';
-            }
-        }
-    }
+bool Lexer::isKeyword(const std::string &word) {
+    return KEYWORDS.find(word) != KEYWORDS.end();
 }
 
-std::string readInput(const std::string &path) {
-    std::ifstream inputFile(path);
-    if (!inputFile.is_open()) {
-        std::cerr << "错误：无法打开文件！" << '\n';
-        return "";
-    }
-    return std::string(
-        (std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>());
+bool Lexer::isSeparator(const std::string &word) {
+    return SEPARATORS.find(word) != SEPARATORS.end();
 }
 
 } // namespace Compiler

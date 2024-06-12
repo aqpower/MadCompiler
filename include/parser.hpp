@@ -3,6 +3,8 @@
 
 #include <string>
 
+namespace Compiler {
+
 class Parser {
   public:
     explicit Parser(const std::string &input);
@@ -28,5 +30,7 @@ class Parser {
     bool isID(const std::string &token) const;
     bool isNUM(const std::string &token) const;
 };
+
+} // namespace Compiler
 
 #endif // PARSER_HPP

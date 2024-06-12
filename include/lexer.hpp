@@ -1,46 +1,41 @@
-#ifndef SYMBOL_TABLE_HPP
-#define SYMBOL_TABLE_HPP
+#ifndef LEXER_HPP
+#define LEXER_HPP
 
+#include "token.hpp"
 #include <string>
-#include <vector>
+#include <unordered_map>
+#include <unordered_set>
 
 namespace Compiler {
 
-enum TokenType {
-    KEYWORD = 1,
-    IDENTIFIER = 2,
-    CONSTANT = 3,
-    OPERATOR = 4,
-    SEPARATOR = 5,
-};
-
-class SymbolTableEntry {
+class Lexer {
   public:
-    SymbolTableEntry(int tokenType, const std::string &symbol);
-
-    std::string symbol; /**< 符号字符串 */
-    int tokenType;      /**< 标记类型 */
-};
-
-class SymbolTable {
-  public:
-    void insertSymbol(const std::string &symbol, int tokenType);
-    void printTable() const;
-    void analyze(const std::string &code);
+    explicit Lexer(std::string code);
+    Token nextToken();
 
   private:
-    void handleAlpha(const std::string &code, size_t &index);
-    void handleDigit(const std::string &code, size_t &index);
-    bool handleSeparatorOrOperator(const std::string &code, size_t &index);
+    std::string code;
+    size_t index;
 
-    std::vector<SymbolTableEntry> entries;
+    const std::unordered_set<std::string> KEYWORDS = {"if",   "int",    "while", "do",
+                                                      "else", "return", "break", "continue"};
+
+    const std::unordered_set<std::string> SEPARATORS = {",", ";", "(", ")", "{", "}"};
+    std::unordered_map<std::string, TokenType> operatorSeparatorMap = {
+        {"+", OPERATOR},  {"-", OPERATOR},  {"*", OPERATOR},  {"/", OPERATOR},
+        {"=", OPERATOR},  {"!=", OPERATOR}, {"<", OPERATOR},  {"<=", OPERATOR},
+        {">", OPERATOR},  {">=", OPERATOR},
+
+        {",", SEPARATOR}, {";", SEPARATOR}, {"(", SEPARATOR}, {")", SEPARATOR},
+        {"{", SEPARATOR}, {"}", SEPARATOR}};
+    void skipWhitespace();
+    Token handleAlpha();
+    Token handleDigit();
+    Token handleSeparatorOrOperator();
+    bool isKeyword(const std::string &);
+    bool isSeparator(const std::string &);
 };
-
-bool isKeyword(const std::string &word);
-bool isSeparator(const std::string &charStr);
-
-std::string readInput(const std::string &path);
 
 } // namespace Compiler
 
-#endif // SYMBOL_TABLE_HPP
+#endif // LEXER_HPP

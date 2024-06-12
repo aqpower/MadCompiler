@@ -1,9 +1,12 @@
 #include "lexer.hpp"
 #include "parser.hpp"
+#include <fstream>
 #include <iostream>
+#include <string>
 
 void handle_cmd();
 void handle_file(const char *path);
+std::string readInput(const std::string &path);
 
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
@@ -21,28 +24,48 @@ int main(int argc, char *argv[]) {
 
 void handle_cmd() {
     std::string code;
-    Compiler::SymbolTable symbolTable;
+    std::cout << "Enter 'exit' to quit." << '\n';
+    code = "";
     while (true) {
-        std::cout << "> ";
-        std::getline(std::cin, code);
-        symbolTable.analyze(code);
-        std::cout << "your input: " << code << '\n';
+        std::cout << "ready> ";
+        std::string code_tmp;
+        std::getline(std::cin, code_tmp);
+        if (code_tmp == "exit") { break; }
+        code += code_tmp + '\n';
     }
-    symbolTable.printTable();
+    Compiler::Lexer lexer(code);
+    lexer.nextToken();
+    Compiler::Parser parser(code);
+    std::cout << parser.parse() << '\n';
 }
 
 void handle_file(const char *path) {
-    std::string code = Compiler::readInput(path);
-    if (code.empty()) { return; }
-    Compiler::SymbolTable symbolTable;
-    symbolTable.analyze(code);
-    symbolTable.printTable();
+    std::string code = readInput(path);
+
+    Compiler::Lexer lexer(code);
+    while(true) {
+        Compiler::Token token = lexer.nextToken();
+        token.print();
+        if (token.type == Compiler::TokenType::END_OF_FILE) {
+            break;
+        }
+    }
 
     std::string input = "{ id = id + num ; }";
-    Parser parser(input);
+    Compiler::Parser parser(input);
     if (parser.parse()) {
         std::cout << "Parsing successful!" << '\n';
     } else {
         std::cerr << "Parsing failed!" << '\n';
     }
+}
+
+std::string readInput(const std::string &path) {
+    std::ifstream inputFile(path);
+    if (!inputFile.is_open()) {
+        std::cerr << "错误：无法打开文件！" << '\n';
+        return "";
+    }
+    return std::string{
+        (std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>()};
 }

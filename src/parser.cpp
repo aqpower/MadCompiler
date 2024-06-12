@@ -1,18 +1,18 @@
 #include "parser.hpp"
 
-Parser::Parser(const std::string &input) : input(input), index(0) {
+Compiler::Parser::Parser(const std::string &input) : input(input), index(0) {
     nextToken();
 }
 
-bool Parser::parse() {
+bool Compiler::Parser::parse() {
     return program() && currentToken == "$";
 }
 
-void Parser::skipWhitespace() {
+void Compiler::Parser::skipWhitespace() {
     while (index < input.length() && isspace(input[index])) { ++index; }
 }
 
-void Parser::nextToken() {
+void Compiler::Parser::nextToken() {
     skipWhitespace();
     if (index >= input.length()) {
         currentToken = "$";
@@ -34,7 +34,7 @@ void Parser::nextToken() {
     }
 }
 
-bool Parser::match(const std::string &expected) {
+bool Compiler::Parser::match(const std::string &expected) {
     if (currentToken == expected) {
         nextToken();
         return true;
@@ -42,33 +42,33 @@ bool Parser::match(const std::string &expected) {
     return false;
 }
 
-bool Parser::isID(const std::string &token) const {
+bool Compiler::Parser::isID(const std::string &token) const {
     return !token.empty() && isalpha(token[0]);
 }
 
-bool Parser::isNUM(const std::string &token) const {
+bool Compiler::Parser::isNUM(const std::string &token) const {
     return !token.empty() && isdigit(token[0]);
 }
 
-bool Parser::program() {
+bool Compiler::Parser::program() {
     return block();
 }
 
-bool Parser::block() {
+bool Compiler::Parser::block() {
     if (match("{")) {
         if (stmts() && match("}")) { return true; }
     }
     return false;
 }
 
-bool Parser::stmts() {
+bool Compiler::Parser::stmts() {
     if (currentToken == "}" || currentToken == "$") {
         return true; // ε
     }
     return stmt() && stmts();
 }
 
-bool Parser::stmt() {
+bool Compiler::Parser::stmt() {
     if (isID(currentToken)) {
         if (match(currentToken) && match("=") && expr() && match(";")) { return true; }
     } else if (match("if")) {
@@ -84,7 +84,7 @@ bool Parser::stmt() {
     return false;
 }
 
-bool Parser::boolExpr() {
+bool Compiler::Parser::boolExpr() {
     if (expr()) {
         if (match("<") || match("<=") || match(">") || match(">=")) { return expr(); }
         return true;
@@ -92,7 +92,7 @@ bool Parser::boolExpr() {
     return false;
 }
 
-bool Parser::expr() {
+bool Compiler::Parser::expr() {
     if (term()) {
         while (match("+") || match("-")) {
             if (!term()) { return false; }
@@ -102,7 +102,7 @@ bool Parser::expr() {
     return false;
 }
 
-bool Parser::term() {
+bool Compiler::Parser::term() {
     if (factor()) {
         while (match("*") || match("/")) {
             if (!factor()) { return false;
@@ -113,7 +113,7 @@ bool Parser::term() {
     return false;
 }
 
-bool Parser::factor() {
+bool Compiler::Parser::factor() {
     if (match("(")) {
         if (expr() && match(")")) { return true; }
     } else if (isID(currentToken) && match(currentToken)) {
