@@ -10,12 +10,12 @@
 # endforeach()
 
 # 查找所有源文件
-file(GLOB LIB_SOURCES "lexer.cpp" "symbol_table.cpp")
+file(GLOB LIB_SOURCES "symbol_table.cpp")
 
 # 创建静态库
 add_library(lexer_lib ${LIB_SOURCES})
 
-add_executable(main main.cpp)
+add_executable(compiler compiler.cpp)
 
-target_link_libraries(main lexer_lib)
+target_link_libraries(compiler lexer_lib)
 
