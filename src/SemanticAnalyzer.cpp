@@ -25,60 +25,60 @@ void SemanticAnalyzer::visit(const ASTNode &node) {
     } else if (auto numNode = dynamic_cast<const NumberNode *>(&node)) {
         visit(*numNode);
     } else if (auto emptyNode = dynamic_cast<const EmptyNode *>(&node)) {
-        emptyNode->print();
+        // emptyNode->print();
     } else {
         std::cerr << "Unrecognized AST node type." << std::endl;
     }
 }
 
 void SemanticAnalyzer::visit(const CompoundStmtNode &node) {
-    std::cout << "Visiting CompoundStmtNode" << std::endl;
+    // std::cout << "Visiting CompoundStmtNode" << std::endl;
     visit(*node.first);
     if (node.second) { visit(*node.second); }
 }
 
 void SemanticAnalyzer::visit(const IfNode &node) {
-    std::cout << "Visiting IfNode" << std::endl;
+    // std::cout << "Visiting IfNode" << std::endl;
     visit(*node.condition);
     visit(*node.thenStmt);
 }
 
 void SemanticAnalyzer::visit(const IfElseNode &node) {
-    std::cout << "Visiting IfElseNode" << std::endl;
+    // std::cout << "Visiting IfElseNode" << std::endl;
     visit(*node.condition);
     visit(*node.thenStmt);
     visit(*node.elseStmt);
 }
 
 void SemanticAnalyzer::visit(const WhileNode &node) {
-    std::cout << "Visiting WhileNode" << std::endl;
+    // std::cout << "Visiting WhileNode" << std::endl;
     visit(*node.condition);
     visit(*node.body);
 }
 
 void SemanticAnalyzer::visit(const AssignNode &node) {
-    std::cout << "Visiting AssignNode" << std::endl;
+    // std::cout << "Visiting AssignNode" << std::endl;
     if (symbolTable.find(node.id.value) == symbolTable.end()) {
-        std::cerr << "Error: Undeclared variable " << node.id.value << std::endl;
+        std::cerr << "错误: 未声明的变量 " << node.id.value << std::endl;
     }
     visit(*node.value);
 }
 
 void SemanticAnalyzer::visit(const ExprNode &node) {
-    std::cout << "Visiting ExprNode" << std::endl;
+    // std::cout << "Visiting ExprNode" << std::endl;
     visit(*node.left);
     visit(*node.right);
 }
 
 void SemanticAnalyzer::visit(const IdentifierNode &node) {
-    std::cout << "Visiting IdentifierNode(" << node.id.value << ")" << std::endl;
+    // std::cout << "Visiting IdentifierNode(" << node.id.value << ")" << std::endl;
     if (symbolTable.find(node.id.value) == symbolTable.end()) {
         symbolTable[node.id.value] = "int"; // 假设所有变量都是 int 类型
     }
 }
 
 void SemanticAnalyzer::visit(const NumberNode &node) {
-    std::cout << "Visiting NumberNode(" << node.value.value << ")" << std::endl;
+    // std::cout << "Visiting NumberNode(" << node.value.value << ")" << std::endl;
 }
 
 } // namespace Compiler

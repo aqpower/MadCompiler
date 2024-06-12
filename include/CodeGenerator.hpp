@@ -27,6 +27,7 @@ class IntermediateCodeGenerator {
   public:
     void generate(const std::unique_ptr<ASTNode> &ast);
     void print() const;
+    const std::vector<Quadruple> &getCode() const;
 
   private:
     std::vector<Quadruple> code;

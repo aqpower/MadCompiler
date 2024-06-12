@@ -14,6 +14,10 @@ void IntermediateCodeGenerator::print() const {
     }
 }
 
+const std::vector<Quadruple> &IntermediateCodeGenerator::getCode() const {
+    return code;
+}
+
 void IntermediateCodeGenerator::visit(const ASTNode &node) {
     if (auto compoundNode = dynamic_cast<const CompoundStmtNode *>(&node)) {
         visit(*compoundNode);
@@ -32,7 +36,7 @@ void IntermediateCodeGenerator::visit(const ASTNode &node) {
     } else if (auto numNode = dynamic_cast<const NumberNode *>(&node)) {
         visit(*numNode);
     } else if (auto emptyNode = dynamic_cast<const EmptyNode *>(&node)) {
-        emptyNode->print();
+        // emptyNode->print();
     } else {
         std::cerr << "Unrecognized AST node type." << std::endl;
     }
