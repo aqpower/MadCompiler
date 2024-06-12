@@ -9,19 +9,19 @@ namespace Compiler {
 class ASTNode {
   public:
     virtual ~ASTNode() = default;
-    virtual void print() const = 0;
+    virtual void print(int indent = 0) const = 0;
 };
 
 class EmptyNode : public ASTNode {
   public:
-    void print() const override;
+    void print(int indent = 0) const override;
 };
 
 class IdentifierNode : public ASTNode {
   public:
     explicit IdentifierNode(Token id);
-    Token id;
-    void print() const override;
+    Token id; // id means identifier
+    void print(int indent = 0) const override;
 };
 
 class ExprNode : public ASTNode {
@@ -30,14 +30,14 @@ class ExprNode : public ASTNode {
     std::unique_ptr<ASTNode> left;
     Token op;
     std::unique_ptr<ASTNode> right;
-    void print() const override;
+    void print(int indent = 0) const override;
 };
 
 class NumberNode : public ASTNode {
   public:
     explicit NumberNode(Token value);
     Token value;
-    void print() const override;
+    void print(int indent = 0) const override;
 };
 
 class AssignNode : public ASTNode {
@@ -45,15 +45,16 @@ class AssignNode : public ASTNode {
     AssignNode(Token id, std::unique_ptr<ASTNode> value);
     Token id;
     std::unique_ptr<ASTNode> value;
-    void print() const override;
+    void print(int indent = 0) const override;
 };
 
+// 这是一个复合语句节点，用于表示多个语句的块
 class CompoundStmtNode : public ASTNode {
   public:
     CompoundStmtNode(std::unique_ptr<ASTNode> first, std::unique_ptr<ASTNode> second);
     std::unique_ptr<ASTNode> first;
     std::unique_ptr<ASTNode> second;
-    void print() const override;
+    void print(int indent = 0) const override;
 };
 
 class IfNode : public ASTNode {
@@ -61,7 +62,7 @@ class IfNode : public ASTNode {
     IfNode(std::unique_ptr<ASTNode> condition, std::unique_ptr<ASTNode> thenStmt);
     std::unique_ptr<ASTNode> condition;
     std::unique_ptr<ASTNode> thenStmt;
-    void print() const override;
+    void print(int indent = 0) const override;
 };
 
 class IfElseNode : public ASTNode {
@@ -73,7 +74,7 @@ class IfElseNode : public ASTNode {
     std::unique_ptr<ASTNode> condition;
     std::unique_ptr<ASTNode> thenStmt;
     std::unique_ptr<ASTNode> elseStmt;
-    void print() const override;
+    void print(int indent = 0) const override;
 };
 
 class WhileNode : public ASTNode {
@@ -81,7 +82,7 @@ class WhileNode : public ASTNode {
     WhileNode(std::unique_ptr<ASTNode> condition, std::unique_ptr<ASTNode> body);
     std::unique_ptr<ASTNode> condition;
     std::unique_ptr<ASTNode> body;
-    void print() const override;
+    void print(int indent = 0) const override;
 };
 
 } // namespace Compiler

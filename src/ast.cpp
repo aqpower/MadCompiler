@@ -1,47 +1,52 @@
 #include "ast.hpp"
 #include <iostream>
-#include <utility>
 
 namespace Compiler {
 
-void EmptyNode::print() const {
-    // 空节点不打印任何内容
+void printIndent(int indent) {
+    for (int i = 0; i < indent; ++i) { std::cout << "  "; }
 }
 
-IdentifierNode::IdentifierNode(Token id) : id(std::move(id)) {
+void EmptyNode::print(int indent) const {
+    printIndent(indent);
+    std::cout << "EmptyNode" << std::endl;
 }
 
-void IdentifierNode::print() const {
-    std::cout << id.value;
+IdentifierNode::IdentifierNode(Token id) : id(id) {
+}
+
+void IdentifierNode::print(int indent) const {
+    printIndent(indent);
+    std::cout << "IdentifierNode(" << id.value << ")" << std::endl;
 }
 
 ExprNode::ExprNode(std::unique_ptr<ASTNode> left, Token op, std::unique_ptr<ASTNode> right)
     : left(std::move(left)), op(op), right(std::move(right)) {
 }
 
-void ExprNode::print() const {
-    std::cout << "(";
-    left->print();
-    std::cout << " " << op.value << " ";
-    right->print();
-    std::cout << ")";
+void ExprNode::print(int indent) const {
+    printIndent(indent);
+    std::cout << "ExprNode(" << op.value << ")" << std::endl;
+    left->print(indent + 1);
+    right->print(indent + 1);
 }
 
-NumberNode::NumberNode(Token value) : value(std::move(value)) {
+NumberNode::NumberNode(Token value) : value(value) {
 }
 
-void NumberNode::print() const {
-    std::cout << value.value;
+void NumberNode::print(int indent) const {
+    printIndent(indent);
+    std::cout << "NumberNode(" << value.value << ")" << std::endl;
 }
 
 AssignNode::AssignNode(Token id, std::unique_ptr<ASTNode> value)
-    : id(std::move(id)), value(std::move(value)) {
+    : id(id), value(std::move(value)) {
 }
 
-void AssignNode::print() const {
-    std::cout << id.value << " = ";
-    value->print();
-    std::cout << ";";
+void AssignNode::print(int indent) const {
+    printIndent(indent);
+    std::cout << "AssignNode(" << id.value << ")" << std::endl;
+    value->print(indent + 1);
 }
 
 CompoundStmtNode::CompoundStmtNode(
@@ -49,21 +54,22 @@ CompoundStmtNode::CompoundStmtNode(
     : first(std::move(first)), second(std::move(second)) {
 }
 
-void CompoundStmtNode::print() const {
-    first->print();
-    std::cout << " ";
-    second->print();
+void CompoundStmtNode::print(int indent) const {
+    printIndent(indent);
+    std::cout << "CompoundStmtNode" << std::endl;
+    first->print(indent + 1);
+    if (second) { second->print(indent + 1); }
 }
 
 IfNode::IfNode(std::unique_ptr<ASTNode> condition, std::unique_ptr<ASTNode> thenStmt)
     : condition(std::move(condition)), thenStmt(std::move(thenStmt)) {
 }
 
-void IfNode::print() const {
-    std::cout << "if (";
-    condition->print();
-    std::cout << ") ";
-    thenStmt->print();
+void IfNode::print(int indent) const {
+    printIndent(indent);
+    std::cout << "IfNode" << std::endl;
+    condition->print(indent + 1);
+    thenStmt->print(indent + 1);
 }
 
 IfElseNode::IfElseNode(
@@ -75,24 +81,23 @@ IfElseNode::IfElseNode(
     , elseStmt(std::move(elseStmt)) {
 }
 
-void IfElseNode::print() const {
-    std::cout << "if (";
-    condition->print();
-    std::cout << ") ";
-    thenStmt->print();
-    std::cout << " else ";
-    elseStmt->print();
+void IfElseNode::print(int indent) const {
+    printIndent(indent);
+    std::cout << "IfElseNode" << std::endl;
+    condition->print(indent + 1);
+    thenStmt->print(indent + 1);
+    elseStmt->print(indent + 1);
 }
 
 WhileNode::WhileNode(std::unique_ptr<ASTNode> condition, std::unique_ptr<ASTNode> body)
     : condition(std::move(condition)), body(std::move(body)) {
 }
 
-void WhileNode::print() const {
-    std::cout << "while (";
-    condition->print();
-    std::cout << ") ";
-    body->print();
+void WhileNode::print(int indent) const {
+    printIndent(indent);
+    std::cout << "WhileNode" << std::endl;
+    condition->print(indent + 1);
+    body->print(indent + 1);
 }
 
 } // namespace Compiler

@@ -35,7 +35,14 @@ void handle_cmd() {
     }
     Compiler::Lexer lexer(code);
     Compiler::Parser parser(lexer);
-    auto tree = parser.parse();
+    auto ast = parser.parse();
+    if (ast) {
+        std:: cout << "Parsing successful!" << '\n';
+        ast->print();
+        std::cout << '\n';
+    } else {
+        std::cerr << "Parsing failed!" << '\n';
+    }
 }
 
 void handle_file(const char *path) {
