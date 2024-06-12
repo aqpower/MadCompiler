@@ -11,12 +11,14 @@ enum TokenType {
     CONSTANT = 3,
     OPERATOR = 4,
     SEPARATOR = 5,
-    END_OF_FILE = 6
+    END_OF_FILE = 6,
+    UNKNOWN = 7
 };
 
 class Token {
   public:
-    Token(TokenType type, const std::string &value);
+    Token() : type(UNKNOWN){};
+    Token(TokenType type, std::string value);
     TokenType type;
     std::string value;
     void print() const;

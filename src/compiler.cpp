@@ -34,27 +34,21 @@ void handle_cmd() {
         code += code_tmp + '\n';
     }
     Compiler::Lexer lexer(code);
-    lexer.nextToken();
-    Compiler::Parser parser(code);
-    std::cout << parser.parse() << '\n';
+    Compiler::Parser parser(lexer);
+    auto tree = parser.parse();
 }
 
 void handle_file(const char *path) {
     std::string code = readInput(path);
 
     Compiler::Lexer lexer(code);
-    while(true) {
-        Compiler::Token token = lexer.nextToken();
-        token.print();
-        if (token.type == Compiler::TokenType::END_OF_FILE) {
-            break;
-        }
-    }
 
-    std::string input = "{ id = id + num ; }";
-    Compiler::Parser parser(input);
-    if (parser.parse()) {
-        std::cout << "Parsing successful!" << '\n';
+    Compiler::Parser parser(lexer);
+    auto ast = parser.parse();
+
+    if (ast) {
+        ast->print();
+        std::cout << '\n';
     } else {
         std::cerr << "Parsing failed!" << '\n';
     }

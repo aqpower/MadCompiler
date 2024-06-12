@@ -1,9 +1,10 @@
 #include "token.hpp"
 #include <iostream>
+#include <utility>
 
 namespace Compiler {
 
-Token::Token(TokenType type, const std::string &value) : type(type), value(value) {
+Token::Token(TokenType type, std::string value) : type(type), value(std::move(value)) {
 }
 
 void Token::print() const {

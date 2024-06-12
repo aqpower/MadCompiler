@@ -1,34 +1,33 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include <string>
+#include "lexer.hpp"
+#include "ast.hpp"
 
 namespace Compiler {
 
 class Parser {
   public:
-    explicit Parser(const std::string &input);
-    bool parse();
+    explicit Parser(Lexer &lexer);
+    std::unique_ptr<ASTNode> parse();
 
   private:
-    std::string input;
-    size_t index;
-    std::string currentToken;
+    Lexer &lexer;
+    Token currentToken;
 
-    bool program();
-    bool block();
-    bool stmts();
-    bool stmt();
-    bool boolExpr();
-    bool expr();
-    bool term();
-    bool factor();
+    void advance();
+    bool match(const Token& token);
+    bool match(TokenType type);
+    bool match(const std::string &value);
 
-    void skipWhitespace();
-    void nextToken();
-    bool match(const std::string &expected);
-    bool isID(const std::string &token) const;
-    bool isNUM(const std::string &token) const;
+    std::unique_ptr<ASTNode> program();
+    std::unique_ptr<ASTNode> block();
+    std::unique_ptr<ASTNode> stmts();
+    std::unique_ptr<ASTNode> stmt();
+    std::unique_ptr<ASTNode> boolExpr();
+    std::unique_ptr<ASTNode> expr();
+    std::unique_ptr<ASTNode> term();
+    std::unique_ptr<ASTNode> factor();
 };
 
 } // namespace Compiler

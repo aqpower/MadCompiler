@@ -13,7 +13,6 @@ class IntermediateCodeGenerator {
 
   private:
     void generateCode(const std::unique_ptr<ASTNode> &node, std::vector<std::string> &code);
-    // 其他中间代码生成相关的私有成员函数
 };
 
 } // namespace Compiler

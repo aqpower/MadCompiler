@@ -16,10 +16,19 @@ Token Lexer::nextToken() {
     if (index >= code.length()) { return Token{TokenType::END_OF_FILE, ""}; }
 
     char currentChar = code[index];
+    Token token;
 
-    if (isalpha(currentChar)) { return handleAlpha(); }
-    if (isdigit(currentChar)) { return handleDigit(); }
-    return handleSeparatorOrOperator();
+    if (isalpha(currentChar)) {
+        token = handleAlpha();
+    } else if (isdigit(currentChar)) {
+        token = handleDigit();
+    } else {
+        token = handleSeparatorOrOperator();
+    }
+
+    token.print();
+
+    return token;
     // return Token(TokenType::END_OF_FILE, ""); // Unrecognized character
 }
 
