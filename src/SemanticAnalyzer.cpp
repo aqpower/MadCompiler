@@ -1,10 +1,16 @@
 #include "SemanticAnalyzer.hpp"
+#include "CodeGenerator.hpp"
 #include <iostream>
+#include <vector>
 
 namespace Compiler {
 
 void SemanticAnalyzer::analyze(const std::unique_ptr<ASTNode> &ast) {
     if (ast) { visit(*ast); }
+}
+
+const std::vector<Quadruple> &IntermediateCodeGenerator::getCode() const {
+    return code;
 }
 
 void SemanticAnalyzer::visit(const ASTNode &node) {

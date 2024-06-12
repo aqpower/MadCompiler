@@ -8,8 +8,10 @@
 
 void handle_cmd(const std::string &outputFile);
 void handle_file(const char *path, const std::string &outputFile);
+void handle_lexer(const char *path, const std::string &outputFile);
 void process_code(const std::string &code, const std::string &outputFile);
 std::string readInput(const std::string &path);
+void show_help(const char *program_name);
 
 int main(int argc, char *argv[]) {
     std::string outputFile = "a.out"; // 默认输出文件名
@@ -17,13 +19,21 @@ int main(int argc, char *argv[]) {
     if (argc <= 1) {
         handle_cmd(outputFile);
     } else if (argc == 2) {
-        handle_file(argv[1], outputFile);
+        if (std::string(argv[1]) == "--help") {
+            show_help(argv[0]);
+        } else {
+            handle_file(argv[1], outputFile);
+        }
     } else if (argc == 4 && std::string(argv[2]) == "-o") {
         outputFile = argv[3];
         handle_file(argv[1], outputFile);
+    } else if (argc == 3 && std::string(argv[2]) == "-o") {
+        handle_file(argv[1], outputFile);
+    } else if (argc == 4 && std::string(argv[2]) == "-l") {
+        handle_lexer(argv[1], outputFile);
     } else {
-        std::cerr << "Usage: " << argv[0] << "( <file_path> [-o <output_file>]\n";
-        return 64;
+        std::cout << "错误: 参数错误!" << '\n';
+        show_help(argv[0]);
     }
 
     return 0;
@@ -37,9 +47,11 @@ void handle_cmd(const std::string &outputFile) {
     std::cout << R"( | |  | | | (_| | (_| | |__| (_) | | | | | | |_) | | |  __/ |   )" << '\n';
     std::cout << R"( |_|  |_|\ \__,_|\__,_|\____\___/|_| |_| |_| .__/|_|_|\___|_|   )" << '\n';
     std::cout << R"(          \____/                           |_|                  )" << '\n';
-    std::cout << R"(   >M@dCompiler Designed by xiaojiong liyunfeng wuzhengbang<                       )" << '\n';
+    std::cout
+        << R"( M@dCompilerCopyright (c) 2024 Designed by xiaojiong liyunfeng wuzhengbang.          )"
+        << '\n';
     std::string code;
-    std::cout << "请输入代码(输入 exit 结束代码输入): \n";
+    std::cout << "请输入待编译的代码(最后一行为 exit 结束代码输入): \n";
     code = "";
     while (true) {
         std::cout << "ready> ";
@@ -54,6 +66,24 @@ void handle_cmd(const std::string &outputFile) {
 void handle_file(const char *path, const std::string &outputFile) {
     std::string code = readInput(path);
     process_code(code, outputFile);
+}
+
+void handle_lexer(const char *path, const std::string &outputFile) {
+    std::string code = readInput(path);
+    Compiler::Lexer lexer(code);
+    std::ofstream outFile(outputFile);
+    if (outFile.is_open()) {
+        while (true) {
+            auto token = lexer.nextToken();
+            if (token.type == Compiler::TokenType::END_OF_FILE) { break; }
+            outFile << "Token: " << token.value << " ("
+                    << Compiler::Token::typeToString(token.type) << "\n";
+        }
+        outFile.close();
+        std::cout << "文件已保存到 " << outputFile << '\n';
+    } else {
+        std::cerr << "错误: 无法打开文件 " << outputFile << '\n';
+    }
 }
 
 void process_code(const std::string &code, const std::string &outputFile) {
@@ -93,9 +123,19 @@ void process_code(const std::string &code, const std::string &outputFile) {
 std::string readInput(const std::string &path) {
     std::ifstream inputFile(path);
     if (!inputFile.is_open()) {
-        std::cerr << "Error: unable to open file!" << '\n';
+        std::cerr << "错误: 无法打开文件!" << '\n';
         return "";
     }
     return std::string{
         (std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>()};
+}
+
+void show_help(const char *program_name) {
+    std::cout << "Usage: " << program_name << " <file_path> [options]\n";
+    std::cout << "Options:\n";
+    std::cout << "  --help          Show this help message and exit\n";
+    std::cout << "  -o <output>     compile the input file and save(default is a.out)\n";
+    std::cout
+        << "  -l <file>       perform lexical analysis on the input file(default is a.out)\n";
+    std::cout << "  <file_path>     Path to the input file to be processed\n";
 }

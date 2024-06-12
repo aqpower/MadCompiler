@@ -14,10 +14,6 @@ void IntermediateCodeGenerator::print() const {
     }
 }
 
-const std::vector<Quadruple> &IntermediateCodeGenerator::getCode() const {
-    return code;
-}
-
 void IntermediateCodeGenerator::visit(const ASTNode &node) {
     if (auto compoundNode = dynamic_cast<const CompoundStmtNode *>(&node)) {
         visit(*compoundNode);
@@ -48,55 +44,49 @@ void IntermediateCodeGenerator::visit(const CompoundStmtNode &node) {
 }
 
 void IntermediateCodeGenerator::visit(const IfNode &node) {
-    std::string conditionTemp = newTemp();
     visit(*node.condition);
     std::string conditionResult = tempMap[node.condition.get()];
 
-    std::string labelElse = "L" + std::to_string(tempCount++);
-    std::string labelEnd = "L" + std::to_string(tempCount++);
+    std::string labelEnd = "L" + std::to_string(lableCount++);
 
-    code.emplace_back("ifFalse", conditionResult, "", labelElse);
+    code.push_back(Quadruple("ifFalse", conditionResult, "", labelEnd));
     visit(*node.thenStmt);
-    code.emplace_back("goto", "", "", labelEnd);
-    code.emplace_back("label", "", "", labelElse);
-    code.emplace_back("label", "", "", labelEnd);
+    code.push_back(Quadruple("label", "", "", labelEnd));
 }
 
 void IntermediateCodeGenerator::visit(const IfElseNode &node) {
-    std::string conditionTemp = newTemp();
     visit(*node.condition);
     std::string conditionResult = tempMap[node.condition.get()];
 
-    std::string labelElse = "L" + std::to_string(tempCount++);
-    std::string labelEnd = "L" + std::to_string(tempCount++);
+    std::string labelElse = "L" + std::to_string(lableCount++);
+    std::string labelEnd = "L" + std::to_string(lableCount++);
 
-    code.emplace_back("ifFalse", conditionResult, "", labelElse);
+    code.push_back(Quadruple("ifFalse", conditionResult, "", labelElse));
     visit(*node.thenStmt);
-    code.emplace_back("goto", "", "", labelEnd);
-    code.emplace_back("label", "", "", labelElse);
+    code.push_back(Quadruple("goto", "", "", labelEnd));
+    code.push_back(Quadruple("label", "", "", labelElse));
     visit(*node.elseStmt);
-    code.emplace_back("label", "", "", labelEnd);
+    code.push_back(Quadruple("label", "", "", labelEnd));
 }
 
 void IntermediateCodeGenerator::visit(const WhileNode &node) {
-    std::string labelBegin = "L" + std::to_string(tempCount++);
-    std::string labelEnd = "L" + std::to_string(tempCount++);
+    std::string labelBegin = "L" + std::to_string(lableCount++);
+    std::string labelEnd = "L" + std::to_string(lableCount++);
 
-    code.emplace_back("label", "", "", labelBegin);
-    std::string conditionTemp = newTemp();
+    code.push_back(Quadruple("label", "", "", labelBegin));
     visit(*node.condition);
     std::string conditionResult = tempMap[node.condition.get()];
 
-    code.emplace_back("ifFalse", conditionResult, "", labelEnd);
+    code.push_back(Quadruple("ifFalse", conditionResult, "", labelEnd));
     visit(*node.body);
-    code.emplace_back("goto", "", "", labelBegin);
-    code.emplace_back("label", "", "", labelEnd);
+    code.push_back(Quadruple("goto", "", "", labelBegin));
+    code.push_back(Quadruple("label", "", "", labelEnd));
 }
 
 void IntermediateCodeGenerator::visit(const AssignNode &node) {
     visit(*node.value);
     std::string valueResult = tempMap[node.value.get()];
-    code.emplace_back("=", valueResult, "", node.id.value);
+    code.push_back(Quadruple("=", valueResult, "", node.id.value));
 }
 
 void IntermediateCodeGenerator::visit(const ExprNode &node) {
@@ -106,9 +96,9 @@ void IntermediateCodeGenerator::visit(const ExprNode &node) {
     std::string leftResult = tempMap[node.left.get()];
     std::string rightResult = tempMap[node.right.get()];
     std::string temp = newTemp();
-
-    code.emplace_back(node.op.value, leftResult, rightResult, temp);
     tempMap[&node] = temp;
+
+    code.push_back(Quadruple(node.op.value, leftResult, rightResult, temp));
 }
 
 void IntermediateCodeGenerator::visit(const IdentifierNode &node) {

@@ -45,6 +45,7 @@ class IntermediateCodeGenerator {
     std::string getTempName();
 
     int tempCount = 0;
+    int lableCount = 0;
     std::unordered_map<const ASTNode *, std::string> tempMap;
 };
 
