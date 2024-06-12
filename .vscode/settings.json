@@ -95,5 +95,8 @@
         "io_context": "cpp",
         "netfwd": "cpp"
     },
-    "cmake.buildTask": true
+    "cmake.buildTask": true,
+    "cSpell.words": [
+        "stmts"
+    ]
 }

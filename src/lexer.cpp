@@ -1,4 +1,4 @@
-#include "symbol_table.hpp"
+#include "lexer.hpp"
 #include <cctype>
 #include <fstream>
 #include <iostream>
@@ -7,19 +7,17 @@
 
 namespace Compiler {
 
-const std::unordered_set<std::string> KEYWORDS = {
-    "if", "int", "while", "do", "else", "return", "break", "continue"};
+const std::unordered_set<std::string> KEYWORDS = {"if",   "int",    "while", "do",
+                                                  "else", "return", "break", "continue"};
 
-const std::unordered_set<std::string> SEPARATORS = {",", ";", "(",
-                                                    ")", "{", "}"};
+const std::unordered_set<std::string> SEPARATORS = {",", ";", "(", ")", "{", "}"};
 
 std::unordered_map<std::string, TokenType> operatorSeparatorMap = {
-    {"+", OPERATOR},  {"-", OPERATOR},  {"*", OPERATOR},  {"/", OPERATOR},
-    {"=", OPERATOR},  {"!=", OPERATOR}, {"<", OPERATOR},  {"<=", OPERATOR},
-    {">", OPERATOR},  {">=", OPERATOR},
+    {"+", OPERATOR},  {"-", OPERATOR},  {"*", OPERATOR},  {"/", OPERATOR},  {"=", OPERATOR},
+    {"!=", OPERATOR}, {"<", OPERATOR},  {"<=", OPERATOR}, {">", OPERATOR},  {">=", OPERATOR},
 
-    {",", SEPARATOR}, {";", SEPARATOR}, {"(", SEPARATOR}, {")", SEPARATOR},
-    {"{", SEPARATOR}, {"}", SEPARATOR}};
+    {",", SEPARATOR}, {";", SEPARATOR}, {"(", SEPARATOR}, {")", SEPARATOR}, {"{", SEPARATOR},
+    {"}", SEPARATOR}};
 
 SymbolTableEntry::SymbolTableEntry(int tokenType, const std::string &symbol)
     : symbol(symbol), tokenType(tokenType) {
@@ -32,8 +30,7 @@ void SymbolTable::insertSymbol(const std::string &symbol, int tokenType) {
 void SymbolTable::printTable() const {
     std::cout << "符号表：\n";
     for (const auto &entry : entries) {
-        std::cout << "(" << entry.tokenType << ", \"" << entry.symbol
-                  << "\")\n";
+        std::cout << "(" << entry.tokenType << ", \"" << entry.symbol << "\")\n";
     }
 }
 
@@ -61,16 +58,14 @@ void SymbolTable::handleDigit(const std::string &code, size_t &index) {
     index = end - 1;
 }
 
-bool SymbolTable::handleSeparatorOrOperator(
-    const std::string &code, size_t &index) {
+bool SymbolTable::handleSeparatorOrOperator(const std::string &code, size_t &index) {
     std::string currentChar(&code[index], 1);
 
     if (currentChar == "<" || currentChar == ">" || currentChar == "!") {
         if (index + 1 < code.size()) {
             std::string nextChar(&code[index + 1], 1);
             std::string combined = currentChar + nextChar;
-            if (operatorSeparatorMap.find(combined)
-                != operatorSeparatorMap.end()) {
+            if (operatorSeparatorMap.find(combined) != operatorSeparatorMap.end()) {
                 currentChar = combined;
                 index++;
             }
@@ -94,8 +89,7 @@ void SymbolTable::analyze(const std::string &code) {
             handleDigit(code, i);
         } else {
             if (!handleSeparatorOrOperator(code, i)) {
-                std::cerr << "错误： " << code[i] << " 不是有效的操作符！"
-                          << '\n';
+                std::cerr << "错误： " << code[i] << " 不是有效的操作符！" << '\n';
             }
         }
     }
@@ -108,8 +102,7 @@ std::string readInput(const std::string &path) {
         return "";
     }
     return std::string(
-        (std::istreambuf_iterator<char>(inputFile)),
-        std::istreambuf_iterator<char>());
+        (std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>());
 }
 
 } // namespace Compiler

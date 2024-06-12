@@ -1,4 +1,5 @@
-#include "symbol_table.hpp"
+#include "lexer.hpp"
+#include "parser.hpp"
 #include <iostream>
 
 void handle_cmd();
@@ -33,8 +34,15 @@ void handle_cmd() {
 void handle_file(const char *path) {
     std::string code = Compiler::readInput(path);
     if (code.empty()) { return; }
-
     Compiler::SymbolTable symbolTable;
     symbolTable.analyze(code);
     symbolTable.printTable();
+
+    std::string input = "{ id = id + num ; }";
+    Parser parser(input);
+    if (parser.parse()) {
+        std::cout << "Parsing successful!" << '\n';
+    } else {
+        std::cerr << "Parsing failed!" << '\n';
+    }
 }

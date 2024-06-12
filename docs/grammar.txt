@@ -1,0 +1,9 @@
+program -> block
+block -> { stmts }
+stmts -> stmt stmts | ε
+stmt -> id = expr ; | if ( bool ) stmt | if ( bool) stmt else stmt | while (bool) stmt | block
+bool -> expr < expr | expr <= expr | expr > expr | expr >= expr | expr
+expr -> expr + term | expr - term | term
+term -> term * factor | term / factor | factor
+factor -> ( expr ) | ID | NUM
+
