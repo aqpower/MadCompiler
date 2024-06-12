@@ -1,3 +1,5 @@
+#include "CodeGenerator.hpp"
+#include "SemanticAnalyzer.hpp"
 #include "lexer.hpp"
 #include "parser.hpp"
 #include <fstream>
@@ -6,6 +8,7 @@
 
 void handle_cmd();
 void handle_file(const char *path);
+void process_code(const std::string &code);
 std::string readInput(const std::string &path);
 
 int main(int argc, char *argv[]) {
@@ -14,8 +17,7 @@ int main(int argc, char *argv[]) {
     } else if (argc == 2) {
         handle_file(argv[1]);
     } else {
-        std::cerr << "用法: " << argv[0] << " <文件路径>" << '\n';
-        perror("Usage: toy.out [path]");
+        std::cerr << "Usage: " << argv[0] << " <file_path>" << '\n';
         return 64;
     }
 
@@ -33,30 +35,30 @@ void handle_cmd() {
         if (code_tmp == "exit") { break; }
         code += code_tmp + '\n';
     }
-    Compiler::Lexer lexer(code);
-    Compiler::Parser parser(lexer);
-    auto ast = parser.parse();
-    
-    if (ast) {
-        std:: cout << "Parsing successful!" << '\n';
-        ast->print();
-        std::cout << '\n';
-    } else {
-        std::cerr << "Parsing failed!" << '\n';
-    }
+    process_code(code);
 }
 
 void handle_file(const char *path) {
     std::string code = readInput(path);
+    process_code(code);
+}
 
+void process_code(const std::string &code) {
     Compiler::Lexer lexer(code);
-
     Compiler::Parser parser(lexer);
     auto ast = parser.parse();
-    
+
     if (ast) {
+        std::cout << "Parsing successful!" << '\n';
         ast->print();
         std::cout << '\n';
+
+        Compiler::SemanticAnalyzer analyzer;
+        analyzer.analyze(ast);
+
+        Compiler::IntermediateCodeGenerator codeGen;
+        codeGen.generate(ast);
+        codeGen.print();
     } else {
         std::cerr << "Parsing failed!" << '\n';
     }
@@ -65,7 +67,7 @@ void handle_file(const char *path) {
 std::string readInput(const std::string &path) {
     std::ifstream inputFile(path);
     if (!inputFile.is_open()) {
-        std::cerr << "错误：无法打开文件！" << '\n';
+        std::cerr << "Error: unable to open file!" << '\n';
         return "";
     }
     return std::string{

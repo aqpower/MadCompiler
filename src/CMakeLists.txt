@@ -10,7 +10,7 @@
 # endforeach()
 
 # 查找所有源文件
-file(GLOB LIB_SOURCES "token.cpp" "lexer.cpp" "parser.cpp" "ast.cpp")
+file(GLOB LIB_SOURCES "token.cpp" "lexer.cpp" "parser.cpp" "ast.cpp" "SemanticAnalyzer.cpp" "CodeGenerator.cpp")
 
 # 创建静态库
 add_library(lexer_lib ${LIB_SOURCES})
