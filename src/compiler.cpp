@@ -32,8 +32,9 @@ int main(int argc, char *argv[]) {
     } else if (argc == 4 && std::string(argv[2]) == "-l") {
         handle_lexer(argv[1], outputFile);
     } else {
-        std::cout << "错误: 参数错误!" << '\n';
+        std::cerr << "错误: 参数错误!" << '\n';
         show_help(argv[0]);
+        return 1;
     }
 
     return 0;
@@ -48,7 +49,7 @@ void handle_cmd(const std::string &outputFile) {
     std::cout << R"( |_|  |_|\ \__,_|\__,_|\____\___/|_| |_| |_| .__/|_|_|\___|_|   )" << '\n';
     std::cout << R"(          \____/                           |_|                  )" << '\n';
     std::cout
-        << R"( M@dCompilerCopyright (c) 2024 Designed by xiaojiong liyunfeng wuzhengbang.          )"
+        << R"( M@dCompiler Copyright (c) 2024 Designed by xiaojiong liyunfeng wuzhengbang.          )"
         << '\n';
     std::string code;
     std::cout << "请输入待编译的代码(最后一行为 exit 结束代码输入): \n";
@@ -93,6 +94,7 @@ void process_code(const std::string &code, const std::string &outputFile) {
 
     if (ast) {
         std::cout << "语法分析成功!" << '\n';
+        std::cout << "构建抽象语法树: \n";
         ast->print();
         std::cout << '\n';
 
@@ -116,7 +118,7 @@ void process_code(const std::string &code, const std::string &outputFile) {
             std::cerr << "错误: 无法打开文件 " << outputFile << '\n';
         }
     } else {
-        std::cerr << "解析失败!" << '\n';
+        std::cerr << "语法分析失败!" << '\n';
     }
 }
 
