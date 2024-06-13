@@ -15,7 +15,7 @@ file(GLOB LIB_SOURCES "token.cpp" "lexer.cpp" "parser.cpp" "ast.cpp" "SemanticAn
 # 创建静态库
 add_library(lexer_lib ${LIB_SOURCES})
 
-add_executable(compiler compiler.cpp)
+add_executable(madcompiler madcompiler.cpp)
 
-target_link_libraries(compiler lexer_lib)
+target_link_libraries(madcompiler lexer_lib)
 
