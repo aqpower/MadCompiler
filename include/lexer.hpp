@@ -28,6 +28,7 @@ class Lexer {
 
         {",", SEPARATOR}, {";", SEPARATOR}, {"(", SEPARATOR}, {")", SEPARATOR},
         {"{", SEPARATOR}, {"}", SEPARATOR}};
+    
     void skipWhitespace();
     Token handleAlpha();
     Token handleDigit();

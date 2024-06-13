@@ -4,7 +4,7 @@ import subprocess
 # 测试用例目录
 TEST_DIR = "./test_cases"
 # 编译器路径
-COMPILER = "./build/src/compiler"
+COMPILER = "./build/src/madcompiler"
 # 输出目录
 OUTPUT_DIR = "./test_outputs"
 
@@ -13,19 +13,22 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # 测试内容描述
 test_right_descriptions = {
-    "test_case1.txt": "测试基本赋值",
-    "test_case2.txt": "测试 if-else 语句",
-    "test_case3.txt": "测试 while 循环",
-    "test_case4.txt": "测试嵌套块",
-    "test_case5.txt": "测试复杂算术表达式",
-    "test_case6.txt": "测试变量声明和赋值",
-    "test_case7.txt": "测试混合运算符",
-    "test_case8.txt": "测试 if 和 while 复合语句",
+    "test_case1.txt": "验证所有的有效等价类",
 }
 
 test_error_descriptions = {
-    "test_case9.txt": "测试没有分号",
-    "test_case10.txt": "测试没有右大括号",
+    "test_case2.txt": "",
+    "test_case3.txt": "",
+    "test_case4.txt": "",
+    "test_case5.txt": "",
+    "test_case6.txt": "",
+    "test_case7.txt": "",
+    "test_case8.txt": "",
+    "test_case9.txt": "",
+    "test_case10.txt": "",
+    "test_case11.txt": "",
+    "test_case12.txt": "",
+    "test_case13.txt": "",
 }
 
 def run_test(test_file):

@@ -9,6 +9,7 @@ namespace Compiler {
 class Parser {
   public:
     explicit Parser(Lexer &lexer);
+
     std::unique_ptr<ASTNode> parse();
 
   private:
@@ -16,7 +17,7 @@ class Parser {
     Token currentToken;
 
     void advance();
-    bool match(const Token& token);
+    bool match(const Token &token);
     bool match(TokenType type);
     bool match(const std::string &value);
 

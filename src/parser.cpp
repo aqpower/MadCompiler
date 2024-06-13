@@ -43,6 +43,7 @@ std::unique_ptr<ASTNode> Parser::parse() {
     if (!result || currentToken.type != TokenType::END_OF_FILE) {
         std::cerr << "语法分析失败: " << currentToken.value << " ("
                   << static_cast<int>(currentToken.type) << ")\n";
+        exit(-11);
         return nullptr;
     }
     return result;
@@ -65,8 +66,9 @@ std::unique_ptr<ASTNode> Parser::block() {
 
 std::unique_ptr<ASTNode> Parser::stmts() {
     // std::cout << "Parsing stmts...\n";
+    // !stmts 为空时返回一个空节点，且当前token为 "}"
     if (currentToken.type== TokenType::SEPARATOR && currentToken.value== "}") {
-        return std::make_unique<EmptyNode>(); // 使用 EmptyNode 表示空节点
+        return std::make_unique<EmptyNode>(); 
     }
     auto stmtNode = stmt();
     auto stmtsNode = stmts();
@@ -74,7 +76,7 @@ std::unique_ptr<ASTNode> Parser::stmts() {
 }
 
 std::unique_ptr<ASTNode> Parser::stmt() {
-    // std::cout << "Parsing stmt...\n"; // 输出调试信息
+    // std::cout << "Parsing stmt...\n"; 
     if (currentToken.type== TokenType::IDENTIFIER) {
         auto idToken = currentToken;
         advance();
@@ -105,7 +107,7 @@ std::unique_ptr<ASTNode> Parser::stmt() {
                 return std::make_unique<WhileNode>(std::move(boolNode), std::move(stmtNode));
             }
         }
-    } else if (match(Token(TokenType::KEYWORD, "int"))) { // 处理变量声明
+    } else if (match(Token(TokenType::KEYWORD, "int"))) { 
         if (currentToken.type== TokenType::IDENTIFIER) {
             auto idToken = currentToken;
             advance();
@@ -121,7 +123,7 @@ std::unique_ptr<ASTNode> Parser::stmt() {
 }
 
 std::unique_ptr<ASTNode> Parser::boolExpr() {
-    // std::cout << "Parsing boolExpr...\n"; // 输出调试信息
+    // std::cout << "Parsing boolExpr...\n";
     auto left = expr();
     if (currentToken.type== TokenType::OPERATOR
         && (currentToken.value== "<" || currentToken.value== "<="
@@ -135,7 +137,7 @@ std::unique_ptr<ASTNode> Parser::boolExpr() {
 }
 
 std::unique_ptr<ASTNode> Parser::expr() {
-    // std::cout << "Parsing expr...\n"; // 输出调试信息
+    // std::cout << "Parsing expr...\n"; 
     auto left = term();
     while (currentToken.type== TokenType::OPERATOR
            && (currentToken.value== "+" || currentToken.value== "-")) {
@@ -148,7 +150,7 @@ std::unique_ptr<ASTNode> Parser::expr() {
 }
 
 std::unique_ptr<ASTNode> Parser::term() {
-    // std::cout << "Parsing term...\n"; // 输出调试信息
+    // std::cout << "Parsing term...\n"; 
     auto left = factor();
     while (currentToken.type== TokenType::OPERATOR
            && (currentToken.value== "*" || currentToken.value== "/")) {
@@ -161,11 +163,11 @@ std::unique_ptr<ASTNode> Parser::term() {
 }
 
 std::unique_ptr<ASTNode> Parser::factor() {
-    // std::cout << "Parsing factor...\n"; // 输出调试信息
+    // std::cout << "Parsing factor...\n"; 
     if (currentToken.type== TokenType::SEPARATOR && currentToken.value== "(") {
-        advance(); // Advance past '('
+        advance(); 
         auto node = expr();
-        if (match(Token(TokenType::SEPARATOR, ")"))) { // Ensure matching ')'
+        if (match(Token(TokenType::SEPARATOR, ")"))) { 
             return node;
         }
     } else if (currentToken.type== TokenType::IDENTIFIER) {

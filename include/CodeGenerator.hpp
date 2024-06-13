@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 namespace Compiler {
@@ -15,12 +16,11 @@ struct Quadruple {
     std::string arg2;
     std::string result;
 
-    Quadruple(
-        const std::string &op,
-        const std::string &arg1,
-        const std::string &arg2,
-        const std::string &result)
-        : op(op), arg1(arg1), arg2(arg2), result(result) {}
+    Quadruple(std::string op, std::string arg1, std::string arg2, std::string result)
+        : op(std::move(op))
+        , arg1(std::move(arg1))
+        , arg2(std::move(arg2))
+        , result(std::move(result)) {}
 };
 
 class IntermediateCodeGenerator {
@@ -42,7 +42,6 @@ class IntermediateCodeGenerator {
     void visit(const CompoundStmtNode &node);
 
     std::string newTemp();
-    std::string getTempName();
 
     int tempCount = 0;
     int lableCount = 0;

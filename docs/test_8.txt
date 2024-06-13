@@ -1,3 +1,0 @@
-{
-    if (a < b) a = b;
-    else a = 0;

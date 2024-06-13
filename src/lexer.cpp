@@ -26,6 +26,7 @@ Token Lexer::nextToken() {
         token = handleSeparatorOrOperator();
     }
 
+
     token.print();
 
     return token;

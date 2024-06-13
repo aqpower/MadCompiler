@@ -17,11 +17,14 @@ enum TokenType {
 
 class Token {
   public:
-    Token() : type(UNKNOWN){};
-    Token(TokenType type, std::string value);
     TokenType type;
     std::string value;
+    
+    Token() : type(UNKNOWN){};
+    Token(TokenType type, std::string value);
+    
     void print() const;
+    
     static std::string typeToString(TokenType type);
 };
 

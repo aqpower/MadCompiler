@@ -9,7 +9,7 @@ void printIndent(int indent) {
 
 void EmptyNode::print(int indent) const {
     printIndent(indent);
-    std::cout << "EmptyNode" << std::endl;
+    std::cout << "EmptyNode" << '\n';
 }
 
 IdentifierNode::IdentifierNode(Token id) : id(id) {
@@ -17,7 +17,7 @@ IdentifierNode::IdentifierNode(Token id) : id(id) {
 
 void IdentifierNode::print(int indent) const {
     printIndent(indent);
-    std::cout << "IdentifierNode(" << id.value << ")" << std::endl;
+    std::cout << "IdentifierNode(" << id.value << ")" << '\n';
 }
 
 ExprNode::ExprNode(std::unique_ptr<ASTNode> left, Token op, std::unique_ptr<ASTNode> right)
@@ -26,7 +26,7 @@ ExprNode::ExprNode(std::unique_ptr<ASTNode> left, Token op, std::unique_ptr<ASTN
 
 void ExprNode::print(int indent) const {
     printIndent(indent);
-    std::cout << "ExprNode(" << op.value << ")" << std::endl;
+    std::cout << "ExprNode(" << op.value << ")" << '\n';
     left->print(indent + 1);
     right->print(indent + 1);
 }
@@ -36,7 +36,7 @@ NumberNode::NumberNode(Token value) : value(value) {
 
 void NumberNode::print(int indent) const {
     printIndent(indent);
-    std::cout << "NumberNode(" << value.value << ")" << std::endl;
+    std::cout << "NumberNode(" << value.value << ")" << '\n';
 }
 
 AssignNode::AssignNode(Token id, std::unique_ptr<ASTNode> value)
@@ -45,7 +45,7 @@ AssignNode::AssignNode(Token id, std::unique_ptr<ASTNode> value)
 
 void AssignNode::print(int indent) const {
     printIndent(indent);
-    std::cout << "AssignNode(" << id.value << ")" << std::endl;
+    std::cout << "AssignNode(" << id.value << ")" << '\n';
     value->print(indent + 1);
 }
 
@@ -56,7 +56,7 @@ CompoundStmtNode::CompoundStmtNode(
 
 void CompoundStmtNode::print(int indent) const {
     printIndent(indent);
-    std::cout << "CompoundStmtNode" << std::endl;
+    std::cout << "CompoundStmtNode" << '\n';
     first->print(indent + 1);
     if (second) { second->print(indent + 1); }
 }
@@ -67,7 +67,7 @@ IfNode::IfNode(std::unique_ptr<ASTNode> condition, std::unique_ptr<ASTNode> then
 
 void IfNode::print(int indent) const {
     printIndent(indent);
-    std::cout << "IfNode" << std::endl;
+    std::cout << "IfNode" << '\n';
     condition->print(indent + 1);
     thenStmt->print(indent + 1);
 }
@@ -83,7 +83,7 @@ IfElseNode::IfElseNode(
 
 void IfElseNode::print(int indent) const {
     printIndent(indent);
-    std::cout << "IfElseNode" << std::endl;
+    std::cout << "IfElseNode" << '\n';
     condition->print(indent + 1);
     thenStmt->print(indent + 1);
     elseStmt->print(indent + 1);
@@ -95,7 +95,7 @@ WhileNode::WhileNode(std::unique_ptr<ASTNode> condition, std::unique_ptr<ASTNode
 
 void WhileNode::print(int indent) const {
     printIndent(indent);
-    std::cout << "WhileNode" << std::endl;
+    std::cout << "WhileNode" << '\n';
     condition->print(indent + 1);
     body->print(indent + 1);
 }

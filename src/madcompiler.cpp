@@ -20,6 +20,11 @@ int main(int argc, char *argv[]) {
         handle_cmd(outputFile);
     } else if (argc == 2) {
         if (std::string(argv[1]) == "--help") {
+            std::cout
+                << '\n'
+                << "MadCompiler is a compiler design project from the NCHU computer science department."
+                << '\n'
+                << '\n';
             show_help(argv[0]);
         } else {
             handle_file(argv[1], outputFile);
@@ -29,7 +34,10 @@ int main(int argc, char *argv[]) {
         handle_file(argv[1], outputFile);
     } else if (argc == 3 && std::string(argv[2]) == "-o") {
         handle_file(argv[1], outputFile);
+    } else if (argc == 3 && std::string(argv[2]) == "-l") {
+        handle_lexer(argv[1], outputFile);
     } else if (argc == 4 && std::string(argv[2]) == "-l") {
+        outputFile = argv[3];
         handle_lexer(argv[1], outputFile);
     } else {
         std::cerr << "错误: 参数错误!" << '\n';
@@ -42,8 +50,17 @@ int main(int argc, char *argv[]) {
 
 void handle_cmd(const std::string &outputFile) {
     std::cout << "\033[38;2;0;255;0m"
-              << R"(  __  __   ____     _  ____                      _ _            )" << '\n';
-    std::cout << R"( |  \\/  | / __ \  __| |/ ___|___  _ __ ___  _ __ (_) | ___ _ __ )" << '\n';
+              << R"( _______ 
+< hello >
+ ------- 
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||)"
+              << '\n'
+              << R"(  __  __   ____      _  ____                      _ _            )" << '\n';
+    std::cout << R"( |  \\/ | / __ \  __| |/ ___|___  _ __ ___  _ __ (_) | ___ _ __ )" << '\n';
     std::cout << R"( | |\/| |/ / _` |/ _` | |   / _ \| '_ ` _ \| '_ \| | |/ _ \ '__|)" << '\n';
     std::cout << R"( | |  | | | (_| | (_| | |__| (_) | | | | | | |_) | | |  __/ |   )" << '\n';
     std::cout << R"( |_|  |_|\ \__,_|\__,_|\____\___/|_| |_| |_| .__/|_|_|\___|_|   )" << '\n';
@@ -103,6 +120,7 @@ void process_code(const std::string &code, const std::string &outputFile) {
 
         Compiler::IntermediateCodeGenerator codeGen;
         codeGen.generate(ast);
+        std::cout << code << '\n';
         codeGen.print();
 
         // 保存生成的中间代码到指定文件

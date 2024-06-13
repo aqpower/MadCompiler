@@ -8,7 +8,6 @@ void SemanticAnalyzer::analyze(const std::unique_ptr<ASTNode> &ast) {
 }
 
 
-
 void SemanticAnalyzer::visit(const ASTNode &node) {
     if (const auto *compoundNode = dynamic_cast<const CompoundStmtNode *>(&node)) {
         visit(*compoundNode);
@@ -60,9 +59,9 @@ void SemanticAnalyzer::visit(const WhileNode &node) {
 
 void SemanticAnalyzer::visit(const AssignNode &node) {
     // std::cout << "Visiting AssignNode" << std::endl;
-    if (symbolTable.find(node.id.value) == symbolTable.end()) {
+    // if (symbolTable.find(node.id.value) == symbolTable.end()) {
         // std::cerr << "错误: 未声明的变量 " << node.id.value << '\n';
-    }
+    // }
     visit(*node.value);
 }
 

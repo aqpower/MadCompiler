@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-
+// 变量声明检查
 namespace Compiler {
 
 class SemanticAnalyzer {
@@ -13,7 +13,7 @@ class SemanticAnalyzer {
     void analyze(const std::unique_ptr<ASTNode> &ast);
 
   private:
-    std::unordered_map<std::string, std::string> symbolTable; // 符号表
+    std::unordered_map<std::string, std::string> symbolTable; 
     void visit(const ASTNode &node);
     void visit(const IdentifierNode &node);
     void visit(const NumberNode &node);
