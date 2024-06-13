@@ -1,7 +1,7 @@
 # MadCompiler
 
 ## Overview
-MadCompiler is a compiler design project from the NCHU computer science department.
+MadCompiler is a compiler course design project from the NCHU computer science department.
 
 ## Features
 - **Lexical Analysis:** Tokenizes the input source code.
@@ -25,11 +25,16 @@ MadCompiler is a compiler design project from the NCHU computer science departme
 ## Usage
 Run the compiler with the following command:
 ```bash
-./build/src/compiler <source_code_file> -o <output_file>
+./build/src/madcompiler <source_code_file> -o <output_file>
+```
+
+Generate the lexical analysis output:
+```
+./build/src/madcompiler <source_code_file> -l <output_file>
 ```
 
 ## Recognized Tokens
-1. **Keywords:** `if`, `int`, `while`, `do`, `else`; token type 1.
+1. **Keywords:** `if`, `if else`, `while`; token type 1.
 2. **Identifiers:** token type 2.
 3. **Constants:** Unsigned integers; token type 3.
 4. **Operators:** `+`, `-`, `*`, `/`, `=`, `>`, `<`, `<=`, `!=`; token type 4.
@@ -63,5 +68,3 @@ The start symbol of the grammar is `program`. The following production rules are
 
 ## License
 MIT License
-
-For more details, visit the [MadCompiler GitHub repository](https://github.com/aqpower/MadCompiler).
