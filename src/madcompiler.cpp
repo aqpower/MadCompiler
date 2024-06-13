@@ -49,7 +49,7 @@ void handle_cmd(const std::string &outputFile) {
     std::cout << R"( |_|  |_|\ \__,_|\__,_|\____\___/|_| |_| |_| .__/|_|_|\___|_|   )" << '\n';
     std::cout << R"(          \____/                           |_|                  )" << '\n';
     std::cout
-        << R"( M@dCompiler Copyright (c) 2024 Designed by xiaojiong liyunfeng wuzhengbang.          )"
+        << R"( M@dCompiler Copyright (c) 2024 Designed by xiaojiong liyunfeng wuzhenbang.          )"
         << '\n';
     std::string code;
     std::cout << "请输入待编译的代码(最后一行为 exit 结束代码输入): \n";
