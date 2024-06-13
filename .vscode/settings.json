@@ -97,6 +97,7 @@
     },
     "cmake.buildTask": true,
     "cSpell.words": [
+        "lable",
         "stmts"
     ]
 }
