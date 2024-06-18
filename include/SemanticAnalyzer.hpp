@@ -13,7 +13,7 @@ class SemanticAnalyzer {
     void analyze(const std::unique_ptr<ASTNode> &ast);
 
   private:
-    std::unordered_map<std::string, std::string> symbolTable; 
+    std::unordered_map<std::string, std::string> symbolTable;
     void visit(const ASTNode &node);
     void visit(const IdentifierNode &node);
     void visit(const NumberNode &node);

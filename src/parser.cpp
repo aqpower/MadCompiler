@@ -10,7 +10,7 @@ Parser::Parser(Lexer &lexer) : lexer(lexer), currentToken(TokenType::END_OF_FILE
 void Parser::advance() {
     currentToken = lexer.nextToken();
     // std::cout << "Current token: " << currentToken.value<< " ("
-    //   << static_cast<int>(currentToken.type) << ")\n"; // 输出调试信息
+    //   << static_cast<int>(currentToken.type) << ")\n";
 }
 
 bool Parser::match(const Token &token) {

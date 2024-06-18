@@ -1,21 +1,14 @@
 import os
 import subprocess
 
-# 测试用例目录
 TEST_DIR = "./test_cases"
-# 编译器路径
 COMPILER = "./build/src/madcompiler"
-# 输出目录
 OUTPUT_DIR = "./test_outputs"
 
-# 创建输出目录
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-# 测试内容描述
 test_right_descriptions = {
     "test_case1.txt": "验证所有的有效等价类",
 }
-
 test_error_descriptions = {
     "test_case2.txt": "",
     "test_case3.txt": "",
@@ -54,20 +47,14 @@ def run_test(test_file):
         return (test_file, result.returncode == 0, result.stdout, result.stderr)
 
 def main():
-    """
-    主函数，运行所有测试用例并打印结果
-    """
     test_files = [os.path.join(TEST_DIR, filename) for filename in os.listdir(TEST_DIR) if filename.endswith('.txt')]
     
-    # 运行所有测试用例
     results = []
     
-    # 黑盒测试
     for test_file in test_files:
         results.append(run_test(test_file))
     
 
-    # 打印测试结果
     print("==============")
     print("黑盒测试结果:")
     for test_file, passed, stdout, stderr in results:

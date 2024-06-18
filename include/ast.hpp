@@ -22,27 +22,27 @@ class IdentifierNode : public ASTNode {
     explicit IdentifierNode(Token id);
 
     Token id; // id means identifier
-    
+
     void print(int indent = 0) const override;
 };
 
 class ExprNode : public ASTNode {
   public:
     ExprNode(std::unique_ptr<ASTNode> left, Token op, std::unique_ptr<ASTNode> right);
-    
+
     std::unique_ptr<ASTNode> left;
     Token op;
     std::unique_ptr<ASTNode> right;
-    
+
     void print(int indent = 0) const override;
 };
 
 class NumberNode : public ASTNode {
   public:
     explicit NumberNode(Token value);
-    
+
     Token value;
-    
+
     void print(int indent = 0) const override;
 };
 
@@ -50,31 +50,31 @@ class NumberNode : public ASTNode {
 class AssignNode : public ASTNode {
   public:
     AssignNode(Token id, std::unique_ptr<ASTNode> value);
-    
+
     Token id;
     std::unique_ptr<ASTNode> value;
-    
+
     void print(int indent = 0) const override;
 };
 
-// stmts -> stmt stmts 
+// stmts -> stmt stmts
 class CompoundStmtNode : public ASTNode {
   public:
     CompoundStmtNode(std::unique_ptr<ASTNode> first, std::unique_ptr<ASTNode> second);
-    
+
     std::unique_ptr<ASTNode> first;
     std::unique_ptr<ASTNode> second;
-    
+
     void print(int indent = 0) const override;
 };
 
 class IfNode : public ASTNode {
   public:
     IfNode(std::unique_ptr<ASTNode> condition, std::unique_ptr<ASTNode> thenStmt);
-    
+
     std::unique_ptr<ASTNode> condition;
     std::unique_ptr<ASTNode> thenStmt;
-    
+
     void print(int indent = 0) const override;
 };
 
@@ -84,21 +84,21 @@ class IfElseNode : public ASTNode {
         std::unique_ptr<ASTNode> condition,
         std::unique_ptr<ASTNode> thenStmt,
         std::unique_ptr<ASTNode> elseStmt);
-    
+
     std::unique_ptr<ASTNode> condition;
     std::unique_ptr<ASTNode> thenStmt;
     std::unique_ptr<ASTNode> elseStmt;
-    
+
     void print(int indent = 0) const override;
 };
 
 class WhileNode : public ASTNode {
   public:
     WhileNode(std::unique_ptr<ASTNode> condition, std::unique_ptr<ASTNode> body);
-    
+
     std::unique_ptr<ASTNode> condition;
     std::unique_ptr<ASTNode> body;
-    
+
     void print(int indent = 0) const override;
 };
 

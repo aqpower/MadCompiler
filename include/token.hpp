@@ -19,12 +19,12 @@ class Token {
   public:
     TokenType type;
     std::string value;
-    
+
     Token() : type(UNKNOWN){};
     Token(TokenType type, std::string value);
-    
+
     void print() const;
-    
+
     static std::string typeToString(TokenType type);
 };
 
